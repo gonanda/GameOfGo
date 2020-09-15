@@ -3,6 +3,7 @@ from collections import namedtuple
 
 COLS = 'ABCDEFGHJKLMNOPQRST'
 
+# Define players black and white
 class Player(enum.Enum):
 
     black = 1
@@ -21,7 +22,7 @@ class Player(enum.Enum):
 
     __repr__ = __str__
 
-
+# Define point on board
 class Point(namedtuple('Point', 'row col')):
 
     def neighbors(self):
