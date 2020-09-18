@@ -161,21 +161,7 @@ def main():
     parser.add_argument('--games-per-color', type=int, default=64)
     parser.add_argument('--log-file', required=True)
 
-    
     args = parser.parse_args() 
-
-    logf = open(args.log_file, 'a')
-    logf.write('----------------------\n')
-    logf.write('Starting with agent1 %s  and agent2 %s at %s\n' % (args.agent1, args.agent2, datetime.datetime.now()))
-    logf.write('number of rounds 1: %d\n' % args.num_rounds1)
-    logf.write('number of rounds 2: %d\n' % args.num_rounds2)
-    logf.write('temperature c1: %f\n' % args.c1)
-    logf.write('temperature c2: %f\n' % args.c2)
-    logf.write('concentration parameter 1: %f\n' % args.concent_param1)
-    logf.write('concentration parameter 2: %f\n' % args.concent_param2)
-    logf.write('dirichlet weight 1: %f\n' % args.dirichlet_weight1)
-    logf.write('dirichlet weight 2: %f\n' % args.dirichlet_weight2)
-    logf.flush()
 
     agent1 = args.agent1
     agent2 = args.agent2
@@ -186,15 +172,12 @@ def main():
         board_size=args.board_size,
         load_args=args)
 
-    logf.write('Agent1 total: %d/%d (%.3f)\n' % (t_wins1,2*args.games_per_color,float(t_wins1)/float(2*args.games_per_color)))
-    logf.write('Agent1 as black: %d/%d (%.3f)\n' % (t_wins1b,args.games_per_color,float(t_wins1b)/float(args.games_per_color)))
-    logf.write('Agent1 as white: %d/%d (%.3f)\n' % (t_wins1w,args.games_per_color,float(t_wins1w)/float(args.games_per_color)))
-    logf.write('Agent2 total: %d/%d (%.3f)\n' % (t_wins2,2*args.games_per_color,float(t_wins2)/float(2*args.games_per_color)))
-    logf.write('Agent2 as black: %d/%d (%.3f)\n' % (t_wins2b,args.games_per_color,float(t_wins2b)/float(args.games_per_color)))
-    logf.write('Agent2 as white: %d/%d (%.3f)\n' % (t_wins2w,args.games_per_color,float(t_wins2w)/float(args.games_per_color)))
-    logf.write('Black total: %d/%d (%.3f)\n' % (t_wins1b+t_wins2b,2*args.games_per_color,float(t_wins1b+t_wins2b)/float(2*args.games_per_color)))
-    logf.write('White total: %d/%d (%.3f)\n' % (t_wins1w+t_wins2w,2*args.games_per_color,float(t_wins1w+t_wins2w)/float(2*args.games_per_color)))
-    logf.flush()
+    with open(args.log_file, 'a') as logf:
+        logf.seek(0,2)
+        if logf.tell()==0:
+            logf.write('agent1,agent2,nr1,nr2,c1,c2,cp1,cp2,dw1,dw2,a1b,a1w,a2b,a2w\n')
+        logf.write('%s,%s,%d,%d,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d\n' % (args.agent1,args.agent2,args.num_rounds1,args.num_rounds2,args.c1,args.c2,args.concent_param1,args.concent_param2,args.dirichlet_weight1,args.dirichlet_weight2,t_wins1b,t_wins1w,t_wins2b,t_wins2w))
+   
 
 if __name__ == '__main__':
     main()
