@@ -1021,3 +1021,8 @@ class GameState():
         game_result = compute_game_result(self)
         return game_result.winner
 
+    def margin(self):
+        if not self.is_over():
+            return None
+        game_result = compute_game_result(self)
+        return game_result.winning_margin
