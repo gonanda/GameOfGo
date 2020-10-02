@@ -25,23 +25,25 @@ class Territory:
                 self.dame_points.append(point)
 
 
-class GameResult(namedtuple('GameResult', 'b w komi')):
+class GameResult(namedtuple('GameResult', 'b w')):
     @property
     def winner(self):
-        if self.b > self.w + self.komi:
+        if self.b > self.w:
             return Player.black
-        return Player.white
+        elif self.w > self.b:
+            return Player.white
+        return None
 
     @property
     def winning_margin(self):
-        w = self.w + self.komi
-        return abs(self.b - w)
+        return abs(self.b - self.w)
 
     def __str__(self):
-        w = self.w + self.komi
-        if self.b > w:
-            return 'B+%.1f' % (self.b - w,)
-        return 'W+%.1f' % (w - self.b,)
+        if self.b > self.w:
+            return 'B+%d' % (self.b - self.w)
+        elif self.w > self.b:
+            return 'W+%d' % (self.w - self.b)
+        return 'DRAW'
 
 
 
@@ -108,5 +110,4 @@ def compute_game_result(game_state):
     territory = evaluate_territory(game_state.board)
     return GameResult(
         territory.num_black_territory + territory.num_black_stones,
-        territory.num_white_territory + territory.num_white_stones,
-        7.5)
+        territory.num_white_territory + territory.num_white_stones)

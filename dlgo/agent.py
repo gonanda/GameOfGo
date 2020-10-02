@@ -94,8 +94,6 @@ class Agent():
 
 
     def select_move(self, game_state):
-
-
         root = self.create_node(game_state, is_root=True, only_sensible=self.only_sensible)
 
         self.stop_search = False
@@ -120,7 +118,7 @@ class Agent():
                 value = -1 * child_node.value
             else:
                 move = node.last_move
-                value = node.value
+                value = -node.value
                 node = node.parent
             while node is not None:
                 node.record_visit(move, value)
@@ -213,9 +211,11 @@ class Agent():
         if game_state.is_over():
             priors = np.zeros(self.encoder.num_moves())
             if game_state.winner() == game_state.next_player:
-                value=1.
+                value=game_state.margin()/(self.encoder.board_size*self.encoder.board_size)
+            elif game_state.winner() == game_state.next_player.other:
+                value=-game_state.margin()/(self.encoder.board_size*self.encoder.board_size)
             else:
-                value=-1.
+                value=0.
         else:
             state_tensor = self.encoder.encode(game_state)
             model_input = np.array([state_tensor])
@@ -238,7 +238,8 @@ class Agent():
         visit_sums = np.sum(experience.visit_counts, axis=1).reshape((num_examples, 1))
         action_target = experience.visit_counts / visit_sums
 
-        value_target = experience.rewards
+        num_points = self.encoder.board_size*self.encoder.board_size
+        value_target = experience.rewards / num_points
 
         self.model.compile(SGD(lr=learning_rate, momentum=momentum), loss=['categorical_crossentropy', 'mse'], loss_weights=[policy_loss_weight,1.-policy_loss_weight])
         self.model.fit(model_input, [action_target, value_target], batch_size=batch_size, epochs=epochs)
