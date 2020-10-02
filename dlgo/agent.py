@@ -242,7 +242,8 @@ class Agent():
         value_target = experience.rewards / num_points
 
         self.model.compile(SGD(lr=learning_rate, momentum=momentum), loss=['categorical_crossentropy', 'mse'], loss_weights=[policy_loss_weight,1.-policy_loss_weight])
-        self.model.fit(model_input, [action_target, value_target], batch_size=batch_size, epochs=epochs)
+        history = self.model.fit(model_input, [action_target, value_target], batch_size=batch_size, epochs=epochs)
+        return history.history
 
     def serialize(self, h5file):
         h5file.create_group('search')
