@@ -263,7 +263,7 @@ def train_worker(work_dir,lear_agent,next_agent,experience_file,lr,mo,batch_size
     learning_agent = load_agent(lear_agent, work_dir, load_args)
     with h5py.File(experience_file, 'r') as expf:
         exp_buffer = load_experience(expf)
-    learning_agent.train(exp_buffer, learning_rate=lr, momentum=mo, batch_size=batch_size, policy_loss_weight=policy_loss_weight, epochs=epochs)
+    history = learning_agent.train(exp_buffer, learning_rate=lr, momentum=mo, batch_size=batch_size, policy_loss_weight=policy_loss_weight, epochs=epochs)
     with h5py.File(os.path.join(work_dir,'agent_%08d.hdf5' % next_agent), 'w') as updated_agent_outf:
         learning_agent.serialize(updated_agent_outf)
 
@@ -278,7 +278,8 @@ def train_worker(work_dir,lear_agent,next_agent,experience_file,lr,mo,batch_size
         'mo': mo,
         'bs': batch_size,
         'plw': policy_loss_weight,
-        'ep': epochs
+        'ep': epochs,
+        'history': history
         })
     with open(ag_path,'w') as outfile:
         json.dump(ag_data,outfile,indent=0)
