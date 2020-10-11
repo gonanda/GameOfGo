@@ -87,3 +87,18 @@ def plot_refs(refs,quantity):
     fig, ax = plt.subplots()
     fig.set_facecolor('w')
     ax.plot([ref['agent'] for ref in refs],[ref[quantity] for ref in refs])
+
+def load_agents(work_dir, directory):
+    with open(work_dir+directory+'/agents.json') as infile:
+        agents = json.load(infile)
+    return agents
+
+def plot_loss(agents,quantity):
+    fig, ax = plt.subplots()
+    fig.set_facecolor('w')
+    x_list =  [agents[0]['agent']/agents[0]['ep']*j for j in range(1,agents[0]['ep']+1)]
+    y_list = agents[0]['history'][quantity]
+    for i in range(1,len(agents)):
+        x_list += [agents[i-1]['agent']+(agents[i]['agent']-agents[i-1]['agent'])/agents[i]['ep']*j for j in range(1,agents[i]['ep']+1)]
+        y_list += agents[i]['history'][quantity]
+    ax.scatter(x_list, y_list)
