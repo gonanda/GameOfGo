@@ -1,4 +1,4 @@
-# Game of Go: AI using the Benson algorithm
+# Game of Go: AI using the Benson's algorithm
 
 The aim of this project is to train a bot to play the game of go at human level using reinforcement learning on artificial neural networks. We used different optimization methods in order to improve the data training. We implemented aditional rules of the game with help of Benson's algorithm. 
 
@@ -16,4 +16,4 @@ The code in this repository is based on the book "Deep Learning and the Game of 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE] (LICENSE) file for details.
+This project is licensed under the MIT License.
