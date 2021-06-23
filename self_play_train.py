@@ -213,7 +213,8 @@ def generate_experience(work_dir, lear_agent, ref_agent, experience_file, num_ga
     with h5py.File(experience_file, 'w') as experience_outf:
         combined_buffer.serialize(experience_outf)
 
-    temp_komi = sum(ag1b+ag2b)/len(ag1b+ag2b)
+    temp_komi = sum(ag1b+ag2b)/len(ag1b+ag2b) # temp_komi (temporary komi) is the mean score of the black player minus the score of the white player. 
+    
     ag1b_komi = [x - temp_komi for x in ag1b]
     ag2b_komi = [x - temp_komi for x in ag2b]
 
